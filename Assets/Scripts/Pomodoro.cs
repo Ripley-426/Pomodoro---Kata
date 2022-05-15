@@ -1,7 +1,6 @@
 public class Pomodoro
 {
     private int _duration;
-    private bool _isStandBy = true;
     private bool _isAbleToFinish;
     private bool _isFinished;
     private bool _isInterrupted;
@@ -18,14 +17,11 @@ public class Pomodoro
         return _duration;
     }
 
-    public bool IsStandBy()
-    {
-        return _isStandBy;
-    }
+    
 
     public void Initiate()
     {
-        _isStandBy = false;
+        _timer.StartCountdown();
         _isAbleToFinish = true;
     }
 
@@ -51,8 +47,10 @@ public class Pomodoro
 
     public void Interrupt()
     {
+        if (!_isAbleToFinish) { return;}
         _isInterrupted = true;
         _isNullified = true;
+        _isAbleToFinish = false;
     }
 
     public string GetInterruptionTime()
@@ -63,5 +61,11 @@ public class Pomodoro
     public bool IsNullified()
     {
         return _isNullified;
+    }
+
+    public void Reset()
+    {
+        if (!_isInterrupted) { return;}
+        _timer.ResetCountdown();
     }
 }

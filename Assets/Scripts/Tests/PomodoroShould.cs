@@ -1,4 +1,5 @@
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace Tests
@@ -34,14 +35,14 @@ namespace Tests
         [Test]
         public void StartInStandBy()
         {
-            Assert.IsTrue(_pomodoro.IsStandBy());
+            _timer.Received(0).StartCountdown();
         }
 
         [Test]
         public void StartCountingDownWhenInitiated()
         {
             _pomodoro.Initiate();
-            Assert.IsFalse(_pomodoro.IsStandBy());
+            _timer.Received(1).StartCountdown();
         }
 
         [Test]
@@ -73,6 +74,7 @@ namespace Tests
         [Test]
         public void BeInterruptible()
         {
+            _pomodoro.Initiate();
             _pomodoro.Interrupt();
             Assert.IsTrue(_pomodoro.IsInterrupted());
         }
@@ -94,8 +96,45 @@ namespace Tests
         [Test]
         public void BeNullifiedIfInterrupted()
         {
+            _pomodoro.Initiate();
             _pomodoro.Interrupt();
             Assert.IsTrue(_pomodoro.IsNullified());
+        }
+        
+        [Test]
+        public void NotBeAbleToFinishWhenInterrupted()
+        {
+            _pomodoro.Initiate();
+            
+            _pomodoro.Interrupt();
+
+            Assert.IsFalse(_pomodoro.IsAbleToFinish());
+        }
+
+        [Test]
+        public void NotBeAbleToBeInterruptedIfNotInitiated()
+        {
+            _pomodoro.Interrupt();
+            
+            Assert.IsFalse(_pomodoro.IsInterrupted());
+        }
+
+        [Test]
+        public void InitializeAgainWhenReset()
+        {
+            _pomodoro.Initiate();
+            _pomodoro.Interrupt();
+            _pomodoro.Reset();
+            
+            _timer.Received(1).ResetCountdown();
+        }
+
+        [Test]
+        public void BeAbleToResetOnlyWhenIsInterrupted()
+        {
+            _pomodoro.Reset();
+            
+            _timer.Received(0).ResetCountdown();
         }
     }
 }

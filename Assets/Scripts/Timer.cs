@@ -4,4 +4,14 @@
     {
         throw new System.NotImplementedException();
     }
+
+    public void StartCountdown()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ResetCountdown()
+    {
+        throw new System.NotImplementedException();
+    }
 }
