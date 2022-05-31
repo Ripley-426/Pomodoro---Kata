@@ -130,11 +130,12 @@ namespace Tests
         }
 
         [Test]
-        public void BeAbleToResetOnlyWhenIsInterrupted()
+        public void NotBeAbleToResetIfNotInterrupted()
         {
             _pomodoro.Reset();
             
             _timer.Received(0).ResetCountdown();
         }
+        
     }
 }
